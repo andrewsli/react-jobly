@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<nav
+  className="Nav"
+>
+  <NavLink
+    exact={true}
+    to="/"
+  >
+    Home
+  </NavLink>
+  <NavLink
+    exact={true}
+    to="/companies"
+  >
+    Companies
+  </NavLink>
+  <NavLink
+    exact={true}
+    to="/jobs"
+  >
+    Jobs
+  </NavLink>
+  <NavLink
+    exact={true}
+    to="/profile"
+  >
+    Profile
+  </NavLink>
+  <NavLink
+    exact={true}
+    to="/login"
+  >
+    Login
+  </NavLink>
+</nav>
+`;

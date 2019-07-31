@@ -1,18 +1,18 @@
 import React from 'react';
-import App from './App';
+import NotFound from './NotFound';
 import toJson from "enzyme-to-json";
 import { shallow, mount } from "enzyme";
 
 it('renders without crashing using shallow', () => {
-  shallow(<App />)
+  shallow(<NotFound />)
 });
 
 it('renders without crashing using mount', () => {
-  mount(<App />)
+  mount(<NotFound />)
 });
 
 it("matches snapshot", function () {
-  let wrapper = shallow(<App />);
+  let wrapper = shallow(<NotFound />);
   let serialized = toJson(wrapper);
   expect(serialized).toMatchSnapshot();
 });
