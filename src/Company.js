@@ -19,21 +19,17 @@ class Company extends Component {
     this.setState({ company, loading: false });
   }
 
-  renderLoading() {
-    return (
-      <p>Fetching company</p>
-    )
-  }
-
   renderCompanyDetails() {
-    const { company } = this.state;
-    console.log(company.jobs)
+    const { jobs, name, description } = this.state.company;
     return (
       <div>
-        <h3>{company.name}</h3>
-        <p>{company.description}</p>
-        {company.jobs.map(job =>
-          <JobCard {...job} key={job.id}/>
+        <h3>{name}</h3>
+        <p>{description}</p>
+        {jobs.map(job =>
+          <JobCard equity={job.equity}
+                   salary={job.salary}
+                   title={job.title} 
+                   key={job.id}/>
         )}
       </div>
     )
@@ -41,9 +37,7 @@ class Company extends Component {
 
   render() {
     return (
-      this.state.loading
-        ? this.renderLoading()
-        : this.renderCompanyDetails()
+      this.state.loading ? <p>Fetching company</p> : this.renderCompanyDetails()
     );
   }
 }

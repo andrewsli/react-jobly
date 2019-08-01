@@ -3,10 +3,6 @@ import { NavLink } from 'react-router-dom';
 import "./Nav.css";
 
 class Nav extends Component {
-  static defaultProps={
-    loggedIn: false,
-  }
-  
   render() {
     return (
       <nav className="Nav">
@@ -14,7 +10,7 @@ class Nav extends Component {
         <NavLink exact to="/companies">Companies</NavLink>
         <NavLink exact to="/jobs">Jobs</NavLink>
         <NavLink exact to="/profile">Profile</NavLink>
-        {this.props.loggedIn
+        {this.props.token
           ?
           <NavLink exact to="/logout">Logout</NavLink>
           :

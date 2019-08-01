@@ -2,37 +2,70 @@ import React, { Component } from 'react';
 import Search from "./Search";
 import CompanyCard from "./CompanyCard";
 import JoblyApi from "./JoblyApi";
+import jwt from "jsonwebtoken";
+import { Redirect } from "react-router-dom";
 
 class Companies extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      companies: []
+      companies: [],
+      loading: true,
+      currUser: {}
     }
     this.handleCompanySearch = this.handleCompanySearch.bind(this);
   }
 
   async componentDidMount() {
-    let companies = await JoblyApi.getCompanies();
-    this.setState({ companies })
+    if (localStorage.token) {
+      try {
+        let user = (await jwt.decode(localStorage.token)).username;
+        let profile = await JoblyApi.getUser(user);
+
+        let companies = await JoblyApi.getCompanies();
+        this.setState({ companies, currUser: profile, loading: false })
+      } catch (err) {
+        this.setState({ loading: false });
+      }
+    } else {
+      this.setState({ loading: false });
+    }
   }
 
   // {search, min_employees, max_employees} => 
-  async handleCompanySearch(searchTerms){
-    let companies = await JoblyApi.getCompanies(searchTerms);
-    this.setState({ companies });
+  async handleCompanySearch(searchTerms) {
+    this.setState({ loading: true }, async function () {
+      let companies = await JoblyApi.getCompanies(searchTerms);
+      this.setState({ companies, loading: false });
+    })
   }
 
   render() {
-    const companies = this.state.companies.map(company => 
-      <CompanyCard {...company} key={company.handle}/>);
+    if (this.state.loading === true) {
+      return <p>Loading...</p>
+    } else {
+      if (Object.keys(this.state.currUser).length === 0) {
+        return <Redirect to={{
+          pathname: '/login',
+          state: { needsLogin: true }
+        }} />
+      }
+    }
+
+    const companies = this.state.companies.map(company =>
+      <CompanyCard name={company.name}
+        description={company.description}
+        logo_url={company.logo_url}
+        handle={company.handle}
+        key={company.handle} />);
 
     return (
       <div>
-        <Search searchFor="companies" searchCompanies={this.handleCompanySearch}/>
+        <Search searchFor="companies" searchCompanies={this.handleCompanySearch} />
         {companies}
       </div>
     );
-  }}
+  }
+}
 
 export default Companies;

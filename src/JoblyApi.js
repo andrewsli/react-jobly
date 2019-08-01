@@ -1,18 +1,17 @@
 import axios from "axios";
 
+const BASE_URL = "http://localhost:3001";
+
 class JoblyApi {
   static async request(endpoint, paramsOrData = {}, verb = "get") {
-    paramsOrData._token = ( // for now, hardcode token for "testing"
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." +
-      "eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaXNfYWRtaW4iOmZhbHNlLCJpYXQiOjE1NjQ1OTY3Mzd9." +
-      "HRbb76ZkCC5MC6EoHjfxmEvBKxtG1h2ZZ_Of67JgX8g");
+    paramsOrData._token = localStorage.token;
 
     // console.debug("API Call:", endpoint, paramsOrData, verb);
 
     try {
       return (await axios({
         method: verb,
-        url: `http://localhost:3001/${endpoint}`,
+        url: `${BASE_URL}/${endpoint}`,
         [verb === "get" ? "params" : "data"]: paramsOrData
       })).data;
       // axios sends query string data via the "params" key,
@@ -35,7 +34,9 @@ class JoblyApi {
   static async getCompanies(query) {
     if (query !== undefined &&
       query['min_employees'] !== undefined &&
-      query['max_employees'] !== undefined) {
+      query['min_employees'] !== null &&
+      query['max_employees'] !== undefined &&
+      query['max_employees'] !== null) {
       if (query['min_employees'] > query['max_employees']) {
         throw new Error("Min employees is larger than max employees");
       }
@@ -46,7 +47,7 @@ class JoblyApi {
       if (queryString !== '') {
         queryString += '&'
       }
-      if (query[key] !== null || query[key] !== undefined || query[key] !== '') {
+      if (query[key] !== null && query[key] !== undefined && query[key] !== '') {
         queryString += `${key}=${query[key]}`;
       }
     }
@@ -85,11 +86,10 @@ class JoblyApi {
       if (queryString !== '') {
         queryString += '&'
       }
-      if (query[key] !== null || query[key] !== undefined || query[key] !== '') {
+      if (query[key] !== null && query[key] !== undefined && query[key] !== '') {
         queryString += `${key}=${query[key]}`;
       }
     }
-    console.log(queryString)
     let res = await this.request(`jobs?${queryString}`);
     return res.jobs;
   }
@@ -119,6 +119,7 @@ class JoblyApi {
     return res.user;
   }
 
+  //{username, password, firstName, lastName, email}
   static async addUser(userDetails) {
     let res = await this.request(`users/`, userDetails, "post");
     return res.token;
@@ -134,6 +135,7 @@ class JoblyApi {
     return res.message;
   }
 
+  //{username, password}
   static async logIn(loginDetails) {
     let res = await this.request('login', loginDetails, "post");
     return res.token

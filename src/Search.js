@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import JoblyApi from "./JoblyApi";
 
 class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: null,
-      min_employees: null,
-      max_employees: null,
-      min_salary: null,
-      min_equity: null,
+      search: '',
+      // empty string because we want placeholder values to show
+      // for the following keys
+      min_employees: '', 
+      max_employees: '',
+      min_salary: '',
+      min_equity: '',
     }
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmitCompany = this.handleSubmitCompany.bind(this);
-    this.handleSubmitJob = this.handleSubmitJob.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
 
   }
 
@@ -21,102 +21,81 @@ class Search extends Component {
     this.setState({ [evt.target.name]: evt.target.value });
   }
 
-  handleSubmitCompany(evt) {
+  handleSubmit(evt) {
     evt.preventDefault();
-    const { search, min_employees, max_employees } = this.state;
-    const searchTerms = {
-      search,
-      min_employees,
-      max_employees
+    const { search, min_employees, max_employees, min_salary, min_equity } = this.state;
+    if (this.props.searchFor === "companies") {
+      const searchTerms = {
+        search,
+        min_employees,
+        max_employees
+      }
+      this.props.searchCompanies(searchTerms);
+    } else {
+      const searchTerms = {
+        search,
+        min_salary,
+        min_equity
+      }
+      this.props.searchJobs(searchTerms);
     }
-    this.props.searchCompanies(searchTerms);
   }
 
-  handleSubmitJob(evt) {
-    evt.preventDefault();
-    const { search, min_salary, min_equity } = this.state;
-    const searchTerms = {
-      search,
-      min_salary,
-      min_equity
-    }
-    this.props.searchJobs(searchTerms);
+  shouldBeDisabled() {
+    const { max_employees, min_employees } = this.state;
+    return ((max_employees !== null && max_employees !== undefined && max_employees !== '')
+      &&
+      (min_employees !== null && min_employees !== undefined && min_employees !== '')
+      &&
+      (min_employees > max_employees))
   }
-  renderCompanies() {
+
+  renderForm() {
+    const { search, max_employees, min_employees, min_salary, min_equity } = this.state;
+    const { searchFor } = this.props;
     return (
+      // <InputFields id, name, value, onChange, placeholder /> or just pojos
       <div>
-        <form onSubmit={this.handleSubmitCompany}>
-          <label htmlFor="search"></label>
+        <form onSubmit={this.handleSubmit}>
+          <label htmlFor="search">{searchFor === "companies" ? "Name: " : "Title: "}</label>
           <input
+            id="search"
             name="search"
-            value={this.state["search"]}
+            value={search}
             onChange={this.handleChange}
-            placeholder="search"></input>
+            placeholder="search" />
 
-          <label htmlFor="min_employees"></label>
+          <label htmlFor={searchFor === "companies" ? "min_employees" : "min_salary"}>
+            {searchFor === "companies" ? "Min employees: " : "Min salary: "}
+          </label>
           <input
-            name="min_employees"
+            id={searchFor === "companies" ? "min_employees" : "min_salary"}
+            name={searchFor === "companies" ? "min_employees" : "min_salary"}
             type="number"
-            value={this.state["min_employees"]}
+            value={searchFor === "companies" ? min_employees : min_salary}
             onChange={this.handleChange}
-            placeholder="min employees"></input>
+            placeholder={searchFor === "companies" ? "Min employees" : "Min salary"} />
 
-          <label htmlFor="max_employees"></label>
+          <label htmlFor={searchFor === "companies" ? "max_employees" : "min_equity"}>
+            {searchFor === "companies" ? "Max employees: " : "Min equity: "}
+          </label>
           <input
-            name="max_employees"
+            id={searchFor === "companies" ? "max_employees" : "min_equity"}
+            name={searchFor === "companies" ? "max_employees" : "min_equity"}
             type="number"
-            value={this.state["max_employees"]}
+            step={searchFor === "companies" ? 1 : "any"}
+            value={searchFor === "companies" ? max_employees : min_equity}
             onChange={this.handleChange}
-            placeholder="max employees"></input>
+            placeholder={searchFor === "companies" ? "Max employees" : "Min equity"} />
           <button
-            disabled={this.state.min_employees > this.state.max_employees}>Search</button>
-        </form>
-      </div>
-    )
-  }
-
-  renderJobs() {
-    return (
-      <div>
-        <form onSubmit={this.handleSubmitJob}>
-          <label htmlFor="search"></label>
-          <input
-            name="search"
-            value={this.state["search"]}
-            onChange={this.handleChange}
-            placeholder="search"></input>
-
-          <label htmlFor="min_salary"></label>
-          <input
-            name="min_salary"
-            type="number"
-            value={this.state["min_salary"]}
-            onChange={this.handleChange}
-            placeholder="min salary"></input>
-
-          <label htmlFor="min_equity"></label>
-          <input
-            name="min_equity"
-            type="number"
-            value={this.state["min_equity"]}
-            onChange={this.handleChange}
-            placeholder="min equity"></input>
-          <button>Search</button>
+            disabled={searchFor === "companies" ? this.shouldBeDisabled() : false}>Search</button>
         </form>
       </div>
     )
   }
 
   render() {
-    if (this.props.searchFor === "companies") {
-      return this.renderCompanies();
-    }
-    else if (this.props.searchFor === "jobs") {
-      return this.renderJobs();
-    }
-    else {
-      return <div>Wrong hood.</div>
-    }
+    return this.renderForm();
   }
 }
 export default Search;

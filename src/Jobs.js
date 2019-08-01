@@ -2,34 +2,65 @@ import React, { Component } from 'react';
 import Search from "./Search";
 import JoblyApi from "./JoblyApi";
 import JobCard from "./JobCard";
+import jwt from "jsonwebtoken";
+import { Redirect } from "react-router-dom";
 
 class Jobs extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      jobs: []
+      jobs: [],
+      loading: true,
+      currUser: {}
     }
     this.handleJobSearch = this.handleJobSearch.bind(this);
   }
 
   async componentDidMount() {
-    let jobs = await JoblyApi.getJobs();
-    this.setState({ jobs })
+    if (localStorage.token) {
+      try {
+        let user = (await jwt.decode(localStorage.token)).username;
+        let profile = await JoblyApi.getUser(user);
+
+        let jobs = await JoblyApi.getJobs();
+        this.setState({ jobs, currUser: profile, loading: false })
+      } catch (err) {
+        this.setState({ loading: false });
+      }
+    } else {
+      this.setState({ loading: false });
+    }
   }
 
   // {search, min_employees, max_employees} => 
   async handleJobSearch(searchTerms) {
-    let jobs = await JoblyApi.getJobs(searchTerms);
-    this.setState({ jobs });
+    this.setState({ loading: true }, async function () {
+      let jobs = await JoblyApi.getJobs(searchTerms);
+      this.setState({ jobs, loading: false });
+    })
   }
 
   render() {
-    const jobs = this.state.jobs.map(job => 
-      <JobCard {...job} key={job.id}/>);
+    if (this.state.loading === true) {
+      return <p>Loading...</p>
+    } else {
+      if (Object.keys(this.state.currUser).length === 0) {
+        return <Redirect to={{
+          pathname: '/login',
+          state: { needsLogin: true }
+        }} />
+      }
+    }
+
+    const jobs = this.state.jobs.map(job =>
+      <JobCard equity={job.equity}
+        salary={job.salary}
+        title={job.title}
+        key={job.id} />);
 
     return (
       <div>
-        <Search searchFor="jobs" searchJobs={this.handleJobSearch}/>
+        <Search searchFor="jobs" searchJobs={this.handleJobSearch} />
         {jobs}
       </div>
     );
