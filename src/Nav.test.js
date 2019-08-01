@@ -9,7 +9,11 @@ it('renders without crashing using shallow', () => {
 });
 
 it('renders without crashing using mount', () => {
-  mount(<Nav />)
+  mount(
+    <MemoryRouter>
+      <Nav />
+    </MemoryRouter>
+  )
 });
 
 it("matches snapshot", function () {
@@ -18,100 +22,25 @@ it("matches snapshot", function () {
   expect(serialized).toMatchSnapshot();
 });
 
-// it("should go to home page when the logo is clicked",
-//   function () {
-//     const wrapper = mount(
-//     <MemoryRouter initialEntries={["/", "/companies", "/jobs", "/profile", "/login", "/logout"]}
-//     initialIndex={1}>
-//       <Nav />
-//     </MemoryRouter>);
+it("should log in button when no user is logged in", function () {
+  let wrapper = mount(
+    <MemoryRouter>
+      <Nav loggedIn={false} />
+    </MemoryRouter>
+  );
 
-//     wrapper
-//       .find('button[name="home"]')
-//       .simulate("click");
+  expect(wrapper.html()).toContain("Login");
+  expect(wrapper.html()).not.toContain("Logout");
 
-//       expect(wrapper.find("Home")).toHaveLength(1);
-//   });
+});
 
-// it("should go to the companies page when the companies tab is clicked",
-//   function () {
-//     const wrapper = mount(
-//     <MemoryRouter initialEntries={["/", "/companies", "/jobs", "/profile", "/login", "/logout"]}
-//     initialIndex={0}>
-//       <Nav />
-//     </MemoryRouter>);
+it("should log out button when user is logged in", function () {
+  let wrapper = mount(
+    <MemoryRouter>
+      <Nav loggedIn={true} />
+    </MemoryRouter>
+  );
 
-//     wrapper
-//       .find('button[name="companies"]')
-//       .simulate("click");
-    
-//     expect(wrapper.find("Companies")).toHaveLength(1);
-//   });
-
-// it("should go to the jobs page when the jobs tab is clicked",
-//   function () {
-//     const wrapper = mount(
-//     <MemoryRouter initialEntries={["/", "/companies", "/jobs", "/profile", "/login", "/logout"]}
-//     initialIndex={0}>
-//       <Nav />
-//     </MemoryRouter>);
-
-//     wrapper
-//       .find('button[name="jobs"]')
-//       .simulate("click");
-
-//     expect(wrapper.find("Jobs")).toHaveLength(1);
-//   });
-
-// it("should go to the profile page when the profile tab is clicked",
-//   function () {
-//     const wrapper = mount(
-//     <MemoryRouter initialEntries={["/", "/companies", "/jobs", "/profile", "/login", "/logout"]}
-//     initialIndex={0}>
-//       <Nav />
-//     </MemoryRouter>);
-
-//     wrapper
-//       .find('button[name="profile"]')
-//       .simulate("click");
-    
-//     expect(wrapper.find("Profile")).toHaveLength(1);
-//   });
-
-// it("should log out when the log out button is clicked",
-//   function () {
-//     const wrapper = mount(
-//     <MemoryRouter initialEntries={["/", "/companies", "/jobs", "/profile", "/login", "/logout"]}
-//     initialIndex={0}>
-//       <Nav />
-//     </MemoryRouter>);
-
-//     wrapper
-//       .find('button[name="logout"]')
-//       .simulate("click");
-
-//     expect(wrapper.find("Home")).toHaveLength(1);
-//   });
-
-// it("should show the log in form when the log in button is clicked",
-//   function () {
-//     const wrapper = mount(
-//     <MemoryRouter initialEntries={["/", "/companies", "/jobs", "/profile", "/login", "/logout"]}
-//     initialIndex={0}>
-//       <Nav />
-//     </MemoryRouter>);
-
-//     wrapper
-//       .find('button[name="logout"]')
-//       .simulate("click");
-
-//     expect(wrapper.find("Login")).toHaveLength(1);
-//   });
-
-// it("should log in button when no user is logged in", function () {
-
-// });
-
-// it("should log out button when user is logged in", function () {
-
-// });
+  expect(wrapper.html()).not.toContain("Login");
+  expect(wrapper.html()).toContain("Logout");
+});

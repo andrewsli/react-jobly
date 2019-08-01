@@ -1,0 +1,32 @@
+/* * {box-sizing: border-box;} */
+.jobCard {
+    max-width: 90vw;
+    max-height: 30vh;
+    border: 1px solid gray;
+    margin: 5px auto;
+    padding: 2px;
+    background-color: ivory;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+    grid-auto-rows: minmax(auto, auto);
+  }
+  .jobCard-salary {
+    grid-column: 2 / 3 ;
+    grid-row: 2;
+  }
+  .jobCard-equity { 
+    grid-column: 2 / 3;
+    grid-row: 3;
+  }
+  .jobCard-title {
+    grid-column: 1 / 4;
+    grid-row: 1;
+  }
+  .jobCard-button {
+    grid-column: 3;
+    grid-row: 4;
+    margin: 4px;
+    padding: 3px 0px;
+  }
+  

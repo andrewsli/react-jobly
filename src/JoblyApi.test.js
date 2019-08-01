@@ -1,5 +1,4 @@
 import JoblyApi from "./JoblyApi";
-import { async } from "q";
 
 describe("companies API", function () {
   it('gets a specific company', async function () {
@@ -53,6 +52,30 @@ describe("companies API", function () {
   it('gets all companies', async function () {
     expect((await JoblyApi.getCompanies()).length).toEqual(50);
   })
+
+  it('gets companies matching search terms', async function () {
+    expect((await JoblyApi.getCompanies({ search: "Perez", min_employees: 100, max_employees: 400 }))).toEqual(
+      [{
+        "description": "Space one approach wife son. Themselves give necessary follow employee return feel. Step animal doctor sign water early.",
+        "handle": "perez-miller",
+        "logo_url": "",
+        "name": "Perez-Miller"
+      }]
+    );
+  })
+
+  it('gets no companies when no company matches search term', async function () {
+    expect((await JoblyApi.getCompanies({ search: "Perez", min_employees: 300, max_employees: 400 }))).toEqual(
+      []
+    );
+  })
+
+  it('should throw error when search terms are bad (when min_employees > max_employees)',
+    async () => {
+      await expect(JoblyApi.getCompanies({ search: "Perez", min_employees: 500, max_employees: 400 }))
+        .rejects
+        .toThrow("Min employees is larger than max employees");
+    })
 
   it('should not create a company when not admin',
     async () => {
@@ -119,6 +142,25 @@ describe("Jobs API", function () {
     expect((await JoblyApi.getJobs()).length).toEqual(200);
   })
 
+  it("should get all matching jobs with search terms", async function () {
+    expect((await JoblyApi.getJobs({ search: "Best boy", min_salary: 100000, min_equity: 0.04 }))).toEqual(
+      [{
+        "company_handle": "jackson-and-sons",
+        "equity": 0.06,
+        "id": 11,
+        "salary": 193000,
+        "state": null,
+        "title": "Best boy",
+      }]
+    );
+  })
+
+  it("should no matching jobs with non-matching search terms", async function () {
+    expect((await JoblyApi.getJobs({ search: "0.1x Engineer", min_salary: 200000, min_equity: 0.1 }))).toEqual(
+      []
+    );
+  })
+
   it('should not create a job when not admin',
     async () => {
       await expect(JoblyApi.addJob({
@@ -163,7 +205,7 @@ describe("Jobs API", function () {
   // })
 });
 
-describe("Users API", function() {
+describe("Users API", function () {
   it('gets a specific user when logged in', async function () {
     expect((await JoblyApi.getUser("testuser"))).toEqual(
       {
@@ -191,7 +233,7 @@ describe("Users API", function() {
       }))).toEqual(expect.any(String));
     })
 
-    it('should not register a user when not given all required info',
+  it('should not register a user when not given all required info',
     async () => {
       await expect(JoblyApi.addUser({
         username: "nopw"
@@ -201,7 +243,7 @@ describe("Users API", function() {
     })
 
   it('should update a user if they are the user',
-    async function (){
+    async function () {
       expect(await JoblyApi.updateUser("testuser", {
         email: "123@456.com"
       })).toEqual({
@@ -213,7 +255,7 @@ describe("Users API", function() {
       })
     })
 
-    it('should not update a user if they are not the user',
+  it('should not update a user if they are not the user',
     async () => {
       await expect(JoblyApi.updateUser("number", {
         email: "number@numbers.com"
@@ -230,7 +272,7 @@ describe("Users API", function() {
   //       .toEqual(["You must be an admin to access."])
   //   })
 
-    it('should not delete a user when they are not the user',
+  it('should not delete a user when they are not the user',
     async () => {
       await expect(JoblyApi.deleteUser("number"))
         .rejects
@@ -238,15 +280,15 @@ describe("Users API", function() {
     })
 });
 
-describe("Auth API", function() {
-  it("logs in properly when given the right info", async function() {
+describe("Auth API", function () {
+  it("logs in properly when given the right info", async function () {
     expect((await JoblyApi.logIn({
       username: "testuser",
       password: "secret"
     }))).toEqual(expect.any(String));
   })
 
-  it("does not log in when not given the right info",     async () => {
+  it("does not log in when not given the right info", async () => {
     await expect(JoblyApi.logIn({
       username: "testuser",
       password: "testuser"

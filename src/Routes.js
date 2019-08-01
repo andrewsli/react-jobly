@@ -6,6 +6,7 @@ import Companies from "./Companies";
 import Jobs from "./Jobs";
 import Profile from "./Profile";
 import LoginSignup from "./LoginSignup";
+import Company from "./Company";
 
 class Routes extends Component {
   render() {
@@ -13,6 +14,7 @@ class Routes extends Component {
       <Switch>
         <Route exact path="/" render={() => <Home />} />
         <Route exact path="/companies" render={() => <Companies />} />
+        <Route exact path="/companies/:handle" render={(rtProps)=> <Company {...rtProps} />} />
         <Route exact path="/jobs" render={() => <Jobs />} />
         <Route exact path="/profile" render={() => <Profile />} />
         <Route exact path="/login" render={() => <LoginSignup />} />

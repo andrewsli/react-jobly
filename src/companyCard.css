@@ -1,0 +1,25 @@
+/* * {box-sizing: border-box;} */
+.companyCard {
+  max-width: 90vw;
+  max-height: 30vh;
+  border: 1px solid gray;
+  margin: 5px auto;
+  padding: 2px;
+  background-color: ivory;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(auto, auto);
+}
+.companyCard-name {
+  grid-column: 2 / 4 ;
+  grid-row: 1 / 2;
+}
+.companyCard-description { 
+  grid-column: 2 / 4;
+  grid-row: 2 / 4;
+}
+.companyCard-logo {
+  grid-column: 1;
+  grid-row: 1 / 4;
+}

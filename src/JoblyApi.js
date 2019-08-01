@@ -7,7 +7,7 @@ class JoblyApi {
       "eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaXNfYWRtaW4iOmZhbHNlLCJpYXQiOjE1NjQ1OTY3Mzd9." +
       "HRbb76ZkCC5MC6EoHjfxmEvBKxtG1h2ZZ_Of67JgX8g");
 
-    console.debug("API Call:", endpoint, paramsOrData, verb);
+    // console.debug("API Call:", endpoint, paramsOrData, verb);
 
     try {
       return (await axios({
@@ -32,8 +32,25 @@ class JoblyApi {
     return res.company;
   }
 
-  static async getCompanies() {
-    let res = await this.request(`companies`);
+  static async getCompanies(query) {
+    if (query !== undefined &&
+      query['min_employees'] !== undefined &&
+      query['max_employees'] !== undefined) {
+      if (query['min_employees'] > query['max_employees']) {
+        throw new Error("Min employees is larger than max employees");
+      }
+    }
+
+    let queryString = '';
+    for (let key in query) {
+      if (queryString !== '') {
+        queryString += '&'
+      }
+      if (query[key] !== null || query[key] !== undefined || query[key] !== '') {
+        queryString += `${key}=${query[key]}`;
+      }
+    }
+    let res = await this.request(`companies?${queryString}`);
     return res.companies;
   }
 
@@ -61,8 +78,19 @@ class JoblyApi {
     return res.job;
   }
 
-  static async getJobs() {
-    let res = await this.request(`jobs/`);
+  static async getJobs(query) {
+    let queryString = '';
+
+    for (let key in query) {
+      if (queryString !== '') {
+        queryString += '&'
+      }
+      if (query[key] !== null || query[key] !== undefined || query[key] !== '') {
+        queryString += `${key}=${query[key]}`;
+      }
+    }
+    console.log(queryString)
+    let res = await this.request(`jobs?${queryString}`);
     return res.jobs;
   }
 
