@@ -11,15 +11,15 @@ import Logout from "./Logout";
 
 class Routes extends Component {
   render() {
-    const { token, loginUser, logOutUser } = this.props;
+    const { currUser, loginUser, logOutUser } = this.props;
     return (
       <Switch>
         <Route exact path="/" render={() => <Home />} />
-        <Route exact path="/companies" render={() => <Companies token={token} />} />
-        <Route exact path="/companies/:handle" render={(rtProps)=> <Company {...rtProps} />} />
-        <Route exact path="/jobs" render={() => <Jobs />} />
-        <Route exact path="/profile" render={() => <Profile />} />
-        <Route exact path="/login" render={(rtProps) => <LoginSignup {...rtProps} token={token} loginUser={loginUser}/>} />
+        <Route exact path="/companies" render={() => <Companies currUser={currUser} />} />
+        <Route exact path="/companies/:handle" render={(rtProps)=> <Company currUser={currUser} {...rtProps} />} />
+        <Route exact path="/jobs" render={() => <Jobs currUser={currUser} />} />
+        <Route exact path="/profile" render={() => <Profile currUser={currUser} />} />
+        <Route exact path="/login" render={(rtProps) => <LoginSignup {...rtProps} currUser={currUser} loginUser={loginUser}/>} />
         <Route exact path="/logout" render={() => <Logout logOutUser={logOutUser}/>} />
         <Route render={() => <NotFound />}/>
         {/* Alternative for Not Found: <Redirect to="/" /> */}

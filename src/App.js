@@ -28,28 +28,36 @@ class App extends Component {
 
         this.setState({ currUser: profile })
       } catch (err) {
-        this.setState({ currUser: {} });
+        this.setState({ currUser: null });
       }
     } else {
-      this.setState({ currUser: {} });
+      this.setState({ currUser: null });
     }
   }
 
-  login() {
+  async login() {
     this.setState({token: localStorage.token});
+    try {
+      let user = (await jwt.decode(localStorage.token)).username;
+      let profile = await JoblyApi.getUser(user);
+
+      this.setState({ currUser: profile })
+    } catch (err) {
+      this.setState({ currUser: null });
+    }
   }
 
   logOut() {
     localStorage.removeItem("token");
-    this.setState({ token: null });
+    this.setState({ token: null, currUser: null });
   }
 
   render() {
     return (
       <div className="App">
         <BrowserRouter>
-          <Nav token={this.state.token} />
-          <Routes token={this.state.token} loginUser={this.login} logOutUser={this.logOut} />
+          <Nav currUser={this.state.currUser} />
+          <Routes currUser={this.state.currUser} loginUser={this.login} logOutUser={this.logOut} />
         </BrowserRouter>
       </div>
     );

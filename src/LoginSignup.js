@@ -80,7 +80,7 @@ class LoginSignup extends Component {
   }
 
   render() {
-    if (this.props.token) {
+    if (this.props.currUser) {
       return (<Redirect to="/" />)
     }
     const { username, password } = this.state;

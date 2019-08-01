@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import JoblyApi from "./JoblyApi";
-import jwt from "jsonwebtoken";
 import { Redirect } from "react-router-dom";
 
 class Profile extends Component {
@@ -8,7 +7,6 @@ class Profile extends Component {
     super(props);
 
     this.state = {
-      currUser: {},
       username: '',
       password: '',
       first_name: '',
@@ -22,13 +20,10 @@ class Profile extends Component {
   }
 
   async componentDidMount() {
-    if (localStorage.token) {
+    if (this.props.currUser) {
       try {
-        let user = (await jwt.decode(localStorage.token)).username;
-        let profile = await JoblyApi.getUser(user);
-
-        let { username, first_name, last_name, email, photo_url } = profile;
-        this.setState({ username, first_name, last_name, email, photo_url, currUser: profile, loading: false });
+        let { username, first_name, last_name, email, photo_url } = this.props.currUser;
+        this.setState({ username, first_name, last_name, email, photo_url, loading: false });
       } catch {
         this.setState({ loading: false })
       }
@@ -57,7 +52,7 @@ class Profile extends Component {
     if (this.state.loading === true) {
       return <p>Loading...</p>
     } else {
-      if (Object.keys(this.state.currUser).length === 0) {
+      if (!this.props.currUser) {
         return <Redirect to={{
           pathname: '/login',
           state: { needsLogin: true }

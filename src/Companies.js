@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Search from "./Search";
 import CompanyCard from "./CompanyCard";
 import JoblyApi from "./JoblyApi";
-import jwt from "jsonwebtoken";
 import { Redirect } from "react-router-dom";
 
 class Companies extends Component {
@@ -11,19 +10,15 @@ class Companies extends Component {
     this.state = {
       companies: [],
       loading: true,
-      currUser: {}
     }
     this.handleCompanySearch = this.handleCompanySearch.bind(this);
   }
 
   async componentDidMount() {
-    if (localStorage.token) {
+    if (this.props.currUser) {
       try {
-        let user = (await jwt.decode(localStorage.token)).username;
-        let profile = await JoblyApi.getUser(user);
-
         let companies = await JoblyApi.getCompanies();
-        this.setState({ companies, currUser: profile, loading: false })
+        this.setState({ companies, loading: false })
       } catch (err) {
         this.setState({ loading: false });
       }
@@ -44,7 +39,7 @@ class Companies extends Component {
     if (this.state.loading === true) {
       return <p>Loading...</p>
     } else {
-      if (Object.keys(this.state.currUser).length === 0) {
+      if (!this.props.currUser) {
         return <Redirect to={{
           pathname: '/login',
           state: { needsLogin: true }

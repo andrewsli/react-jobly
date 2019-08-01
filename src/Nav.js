@@ -10,7 +10,7 @@ class Nav extends Component {
         <NavLink exact to="/companies">Companies</NavLink>
         <NavLink exact to="/jobs">Jobs</NavLink>
         <NavLink exact to="/profile">Profile</NavLink>
-        {this.props.token
+        {this.props.currUser 
           ?
           <NavLink exact to="/logout">Logout</NavLink>
           :
