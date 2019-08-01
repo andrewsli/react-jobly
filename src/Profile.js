@@ -17,6 +17,7 @@ class Profile extends Component {
     }
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   async componentDidMount() {
@@ -39,13 +40,14 @@ class Profile extends Component {
   async handleSubmit(evt) {
     evt.preventDefault();
     const { username, password, first_name, last_name, email, photo_url } = this.state;
-    const userDetails = { username, password, first_name, last_name, email, photo_url };
+    const userDetails = { password, first_name, last_name, email, photo_url };
     for (let key in userDetails) {
       if (userDetails[key] === undefined || userDetails[key] === null || userDetails[key] === '') {
         delete userDetails[key];
       }
     }
-    await JoblyApi.updateUser(username, userDetails);
+    let updatedUser = await JoblyApi.updateUser(username, userDetails);
+    this.props.updateCurrUser(updatedUser);
   }
 
   render() {
@@ -75,7 +77,7 @@ class Profile extends Component {
           <input name="email" value={email} onChange={this.handleChange} />
           <label>Photo URL</label>
           <input name="photo_url" value={photo_url ? photo_url : ''} onChange={this.handleChange} />
-          <label>Re-enter Password</label>
+          <label>Enter New Password</label>
           <input name="password" type="password" value={password} onChange={this.handleChange} />
           <button>Save Changes</button>
         </form>

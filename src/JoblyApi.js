@@ -35,13 +35,15 @@ class JoblyApi {
     if (query !== undefined &&
       query['min_employees'] !== undefined &&
       query['min_employees'] !== null &&
+      query['min_employees'] !== '' &&
       query['max_employees'] !== undefined &&
-      query['max_employees'] !== null) {
+      query['max_employees'] !== null &&
+      query['max_employees'] !== '')
+      {
       if (query['min_employees'] > query['max_employees']) {
         throw new Error("Min employees is larger than max employees");
       }
     }
-
     let queryString = '';
     for (let key in query) {
       if (queryString !== '') {
@@ -127,6 +129,7 @@ class JoblyApi {
 
   static async updateUser(username, userDetails) {
     let res = await this.request(`users/${username}`, userDetails, "patch");
+    console.log(res);
     return res.user;
   }
 

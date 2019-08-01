@@ -12,12 +12,12 @@ class App extends Component {
     super(props);
 
     this.state = {
-      token: localStorage.token,
       currUser: null
     }
 
     this.login = this.login.bind(this);
     this.logOut = this.logOut.bind(this);
+    this.updateUser = this.updateUser.bind(this);
   }
 
   async componentDidMount() {
@@ -36,7 +36,6 @@ class App extends Component {
   }
 
   async login() {
-    this.setState({token: localStorage.token});
     try {
       let user = (await jwt.decode(localStorage.token)).username;
       let profile = await JoblyApi.getUser(user);
@@ -49,7 +48,12 @@ class App extends Component {
 
   logOut() {
     localStorage.removeItem("token");
-    this.setState({ token: null, currUser: null });
+    this.setState({ currUser: null });
+  }
+
+  updateUser(updatedUser) {
+    const {username, first_name, last_name, email, photo_url} = updatedUser;
+    this.setState({currUser: {username, first_name, last_name, email, photo_url}});
   }
 
   render() {
@@ -57,7 +61,7 @@ class App extends Component {
       <div className="App">
         <BrowserRouter>
           <Nav currUser={this.state.currUser} />
-          <Routes currUser={this.state.currUser} loginUser={this.login} logOutUser={this.logOut} />
+          <Routes currUser={this.state.currUser} loginUser={this.login} logOutUser={this.logOut} updateUserDetails={this.updateUser}/>
         </BrowserRouter>
       </div>
     );

@@ -45,7 +45,6 @@ class LoginSignup extends Component {
     } else {
       token = await JoblyApi.logIn({ username, password });
     }
-    //also set state in app
     localStorage.setItem("token", token)
     this.props.loginUser();
   }
