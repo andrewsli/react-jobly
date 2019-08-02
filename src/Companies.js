@@ -9,7 +9,7 @@ class Companies extends Component {
     super(props);
     this.state = {
       companies: [],
-      loading: true,
+      loading: true
     }
     this.handleCompanySearch = this.handleCompanySearch.bind(this);
   }

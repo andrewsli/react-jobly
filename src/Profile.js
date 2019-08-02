@@ -13,7 +13,8 @@ class Profile extends Component {
       last_name: '',
       email: '',
       photo_url: '',
-      loading: true
+      loading: true,
+      updated: false
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -33,6 +34,12 @@ class Profile extends Component {
     }
   }
 
+  componentDidUpdate() {
+    if (this.state.updated) {
+      setTimeout(() => {this.setState({ updated: false })}, 3000)
+    }
+  }
+
   handleChange(evt) {
     this.setState({ [evt.target.name]: evt.target.value });
   }
@@ -48,6 +55,7 @@ class Profile extends Component {
     }
     let updatedUser = await JoblyApi.updateUser(username, userDetails);
     this.props.updateCurrUser(updatedUser);
+    this.setState({ updated: true, password: '' });
   }
 
   render() {
@@ -77,10 +85,12 @@ class Profile extends Component {
           <input name="email" value={email} onChange={this.handleChange} />
           <label>Photo URL</label>
           <input name="photo_url" value={photo_url ? photo_url : ''} onChange={this.handleChange} />
-          <label>Enter New Password</label>
-          <input name="password" type="password" value={password} onChange={this.handleChange} />
-          <button>Save Changes</button>
+          <label>New Password</label>
+          <input name="password" type="password" value={password} onChange={this.handleChange} /> <br />
+          {this.state.updated ? <p>User successfully updated</p> : <button disabled={this.state.password === ''}>Save Changes</button>
+          }
         </form>
+
       </div>
     );
   }

@@ -12,7 +12,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      currUser: null
+      currUser: null,
+      loading: true
     }
 
     this.login = this.login.bind(this);
@@ -26,12 +27,12 @@ class App extends Component {
         let user = (await jwt.decode(localStorage.token)).username;
         let profile = await JoblyApi.getUser(user);
 
-        this.setState({ currUser: profile })
+        this.setState({ currUser: profile, loading: false })
       } catch (err) {
-        this.setState({ currUser: null });
+        this.setState({ currUser: null, loading: false });
       }
     } else {
-      this.setState({ currUser: null });
+      this.setState({ currUser: null, loading: false });
     }
   }
 
@@ -52,19 +53,23 @@ class App extends Component {
   }
 
   updateUser(updatedUser) {
-    const {username, first_name, last_name, email, photo_url} = updatedUser;
-    this.setState({currUser: {username, first_name, last_name, email, photo_url}});
+    const { username, first_name, last_name, email, photo_url } = updatedUser;
+    this.setState({ currUser: { username, first_name, last_name, email, photo_url } });
   }
 
   render() {
-    return (
-      <div className="App">
-        <BrowserRouter>
-          <Nav currUser={this.state.currUser} />
-          <Routes currUser={this.state.currUser} loginUser={this.login} logOutUser={this.logOut} updateUserDetails={this.updateUser}/>
-        </BrowserRouter>
-      </div>
-    );
+    if (this.state.loading) {
+      return null;
+    } else {
+      return (
+        <div className="App">
+          <BrowserRouter>
+            <Nav currUser={this.state.currUser} />
+            <Routes currUser={this.state.currUser} loginUser={this.login} logOutUser={this.logOut} updateUserDetails={this.updateUser} />
+          </BrowserRouter>
+        </div>
+      );
+    }
   }
 }
 

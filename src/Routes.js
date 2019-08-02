@@ -14,7 +14,7 @@ class Routes extends Component {
     const { updateUserDetails, currUser, loginUser, logOutUser } = this.props;
     return (
       <Switch>
-        <Route exact path="/" render={() => <Home />} />
+        <Route exact path="/" render={() => <Home currUser={currUser}/>} />
         <Route exact path="/companies" render={() => <Companies currUser={currUser} />} />
         <Route exact path="/companies/:handle" render={(rtProps)=> <Company currUser={currUser} {...rtProps} />} />
         <Route exact path="/jobs" render={() => <Jobs currUser={currUser} />} />
