@@ -8,9 +8,8 @@ class CompanyCard extends Component {
   render() {
     const { name, description, logo_url, handle } = this.props;
     return (
-      <Link to={`/companies/${handle}`}>
-        <div className="companyCard">
-          <div className="companyCard-name">
+      <div className="companyCard">
+        <div className="companyCard-name">
             <h3>{name}</h3>
           </div>
           <div className="companyCard-description">
@@ -21,8 +20,8 @@ class CompanyCard extends Component {
               src={logo_url || DEFAULT_LOGO}
               alt={handle} />
           </div>
-        </div>
-      </Link>
+        <Link className="companyCard-link" to={`/companies/${handle}`}/>
+      </div>
 
     )
   }

@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import JoblyApi from "./JoblyApi";
 import JobCard from "./JobCard";
+import UserContext from './UserContext';
 
 class Company extends Component {
+  static contextType = UserContext;
+
   constructor(props) {
     super(props);
 
@@ -20,15 +23,21 @@ class Company extends Component {
   }
 
   renderCompanyDetails() {
+    const currUser = this.context;
+    const { updateCurrUser } = this.props;
     const { jobs, name, description } = this.state.company;
     return (
       <div>
         <h3>{name}</h3>
         <p>{description}</p>
         {jobs.map(job =>
-          <JobCard equity={job.equity}
+          <JobCard
+            currUser={currUser}
+            equity={job.equity}
             salary={job.salary}
             title={job.title}
+            id={job.id}
+            updateJobs={updateCurrUser}
             key={job.id} />
         )}
       </div>

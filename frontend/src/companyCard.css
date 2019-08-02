@@ -11,6 +11,10 @@
   grid-gap: 10px;
   grid-auto-rows: minmax(auto, auto);
 }
+.companyCard-link {
+  grid-column: 1 / 4;
+  grid-row: 1 / 4;
+}
 .companyCard-name {
   grid-column: 2 / 4 ;
   grid-row: 1 / 2;
