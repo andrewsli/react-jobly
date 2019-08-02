@@ -19,31 +19,31 @@ class App extends Component {
     this.login = this.login.bind(this);
     this.logOut = this.logOut.bind(this);
     this.updateUser = this.updateUser.bind(this);
+    this.updateJobs = this.updateJobs.bind(this);
   }
 
+  //call login to get rid of duplicate code
   async componentDidMount() {
     if (localStorage.token) {
-      try {
-        let user = (await jwt.decode(localStorage.token)).username;
-        let profile = await JoblyApi.getUser(user);
-
-        this.setState({ currUser: profile, loading: false })
-      } catch (err) {
-        this.setState({ currUser: null, loading: false });
-      }
+      let currUser = await this.getUser();
+      this.setState({ currUser, loading: false });
     } else {
       this.setState({ currUser: null, loading: false });
     }
   }
 
   async login() {
+    let currUser = await this.getUser();
+    this.setState({ currUser });
+  }
+
+  async getUser() {
     try {
       let user = (await jwt.decode(localStorage.token)).username;
       let profile = await JoblyApi.getUser(user);
-
-      this.setState({ currUser: profile })
+      return profile;
     } catch (err) {
-      this.setState({ currUser: null });
+      return null;
     }
   }
 
@@ -57,6 +57,11 @@ class App extends Component {
     this.setState({ currUser: { username, first_name, last_name, email, photo_url } });
   }
 
+  async updateJobs() {
+    let currUser = await this.getUser();
+    this.setState({ currUser });
+  }
+
   render() {
     if (this.state.loading) {
       return null;
@@ -65,7 +70,11 @@ class App extends Component {
         <div className="App">
           <BrowserRouter>
             <Nav currUser={this.state.currUser} />
-            <Routes currUser={this.state.currUser} loginUser={this.login} logOutUser={this.logOut} updateUserDetails={this.updateUser} />
+            <Routes currUser={this.state.currUser}
+              loginUser={this.login}
+              logOutUser={this.logOut}
+              updateUserDetails={this.updateUser}
+              updateUserJobs={this.updateJobs} />
           </BrowserRouter>
         </div>
       );

@@ -14,22 +14,18 @@ class LoginSignup extends Component {
       email: ''
     }
 
-    this.toggleLogIn = this.toggleLogIn.bind(this);
-    this.toggleSignUp = this.toggleSignUp.bind(this);
+    this.showLogIn = this.showLogIn.bind(this);
+    this.showSignUp = this.showSignUp.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
-  toggleLogIn() {
-    this.setState({
-      signUp: false
-    })
+  showLogIn() {
+    this.setState({ signUp: false });
   }
 
-  toggleSignUp() {
-    this.setState({
-      signUp: true
-    })
+  showSignUp() {
+    this.setState({ signUp: true });
   }
 
   handleChange(evt) {
@@ -87,8 +83,8 @@ class LoginSignup extends Component {
     return (
       <div>
         {locationState && locationState.needsLogin ? <h3>Please log in.</h3> : null}
-        <button onClick={this.toggleLogIn}>Log In</button>
-        <button onClick={this.toggleSignUp}>Sign Up</button>
+        <button onClick={this.showLogIn}>Log In</button>
+        <button onClick={this.showSignUp}>Sign Up</button>
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="username">Username: </label>
           <input

@@ -38,8 +38,7 @@ class JoblyApi {
       query['min_employees'] !== '' &&
       query['max_employees'] !== undefined &&
       query['max_employees'] !== null &&
-      query['max_employees'] !== '')
-      {
+      query['max_employees'] !== '') {
       if (query['min_employees'] > query['max_employees']) {
         throw new Error("Min employees is larger than max employees");
       }
@@ -111,6 +110,12 @@ class JoblyApi {
     return res.message;
   }
 
+  // ADD TEST FOR THIS ONE LATER
+  static async applyJob(jobId) {
+    let res = await this.request(`jobs/${jobId}/apply`, {}, "post");
+    return res.message;
+  }
+
   static async getUsers() {
     let res = await this.request(`users/`);
     return res.users;
@@ -129,7 +134,6 @@ class JoblyApi {
 
   static async updateUser(username, userDetails) {
     let res = await this.request(`users/${username}`, userDetails, "patch");
-    console.log(res);
     return res.user;
   }
 

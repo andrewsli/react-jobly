@@ -11,13 +11,13 @@ import Logout from "./Logout";
 
 class Routes extends Component {
   render() {
-    const { updateUserDetails, currUser, loginUser, logOutUser } = this.props;
+    const { updateUserDetails, updateUserJobs, currUser, loginUser, logOutUser } = this.props;
     return (
       <Switch>
         <Route exact path="/" render={() => <Home currUser={currUser}/>} />
         <Route exact path="/companies" render={() => <Companies currUser={currUser} />} />
         <Route exact path="/companies/:handle" render={(rtProps)=> <Company currUser={currUser} {...rtProps} />} />
-        <Route exact path="/jobs" render={() => <Jobs currUser={currUser} />} />
+        <Route exact path="/jobs" render={() => <Jobs currUser={currUser} updateCurrJobs={updateUserJobs}/>} />
         <Route exact path="/profile" render={() => <Profile updateCurrUser={updateUserDetails} currUser={currUser} />} />
         <Route exact path="/login" render={(rtProps) => <LoginSignup {...rtProps} currUser={currUser} loginUser={loginUser}/>} />
         <Route exact path="/logout" render={() => <Logout logOutUser={logOutUser}/>} />

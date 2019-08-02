@@ -36,10 +36,12 @@ class Jobs extends Component {
   }
 
   render() {
+    const { currUser, updateCurrJobs }= this.props;
+
     if (this.state.loading === true) {
       return <p>Loading...</p>
     } else {
-      if (!this.props.currUser) {
+      if (!currUser) {
         return <Redirect to={{
           pathname: '/login',
           state: { needsLogin: true }
@@ -48,9 +50,13 @@ class Jobs extends Component {
     }
 
     const jobs = this.state.jobs.map(job =>
-      <JobCard equity={job.equity}
+      <JobCard 
+        currUser={currUser}
+        equity={job.equity}
         salary={job.salary}
         title={job.title}
+        id={job.id}
+        updateJobs={updateCurrJobs}
         key={job.id} />);
 
     return (

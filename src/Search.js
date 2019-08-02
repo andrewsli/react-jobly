@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import InputField from "./InputField";
 
 class Search extends Component {
   constructor(props) {
@@ -18,6 +19,7 @@ class Search extends Component {
   }
 
   handleChange(evt) {
+    console.log(evt.target);
     this.setState({ [evt.target.name]: evt.target.value });
   }
 
@@ -53,19 +55,26 @@ class Search extends Component {
   renderForm() {
     const { search, max_employees, min_employees, min_salary, min_equity } = this.state;
     const { searchFor } = this.props;
+
     return (
-      // <InputFields id, name, value, onChange, placeholder /> or just pojos
+      // <InputField id/name/htmlFor="search", placeholder/label:, value, handleChange /> or just pojos
       <div>
         <form onSubmit={this.handleSubmit}>
-          <label htmlFor="search">{searchFor === "companies" ? "Name: " : "Title: "}</label>
+          <InputField
+            id="search"
+            placeholder={searchFor === "companies" ? "Name" : "Title"}
+            value={search}
+            handleChange={this.handleChange}
+          />
+          {/* <label htmlFor="search">{searchFor === "companies" ? "Name: " : "Title: "}</label>
           <input
             id="search"
             name="search"
             value={search}
             onChange={this.handleChange}
-            placeholder="search" />
-
-          <label htmlFor={searchFor === "companies" ? "min_employees" : "min_salary"}>
+            placeholder="search" /> */}
+          {searchFor === "companies" ? renderCompaniesSearch() : renderJobsSearch()}
+          {/* <label htmlFor={searchFor === "companies" ? "min_employees" : "min_salary"}>
             {searchFor === "companies" ? "Min employees: " : "Min salary: "}
           </label>
           <input
@@ -74,7 +83,7 @@ class Search extends Component {
             type="number"
             value={searchFor === "companies" ? min_employees : min_salary}
             onChange={this.handleChange}
-            placeholder={searchFor === "companies" ? "Min employees" : "Min salary"} />
+            placeholder={searchFor === "companies" ? "Min employees" : "Min salary"} /> */}
 
           <label htmlFor={searchFor === "companies" ? "max_employees" : "min_equity"}>
             {searchFor === "companies" ? "Max employees: " : "Min equity: "}
