@@ -71,7 +71,6 @@ class Profile extends Component {
   }
 
   render() {
-    console.log("RENDERING");
     const currUser = this.context;
     if (this.state.loading === true) {
       return <p>Loading...</p>
