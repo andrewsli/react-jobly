@@ -1,0 +1,69 @@
+{
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "password": {
+      "$id": "/properties/password",
+      "type": "string",
+      "title": "The Password Schema ",
+      "default": "",
+      "minLength": 5,
+      "maxLength": 55,
+      "examples": ["foo123"]
+    },
+    "first_name": {
+      "$id": "/properties/first_name",
+      "type": "string",
+      "title": "The First_name Schema ",
+      "default": "",
+      "minLength": 1,
+      "maxLength": 55,
+      "examples": ["Michael"]
+    },
+    "last_name": {
+      "$id": "/properties/last_name",
+      "type": "string",
+      "title": "The Last_name Schema ",
+      "default": "",
+      "minLength": 1,
+      "maxLength": 55,
+      "examples": ["Hueter"]
+    },
+    "photo_url": {
+      "$id": "/properties/photo_url",
+      "type": "string",
+      "title": "The Photo Schema ",
+      "format": "uri",
+      "default": "",
+      "examples": [
+        "https://avatars0.githubusercontent.com/u/13444851?s=460&v=4"
+      ]
+    },
+    "current_company": {
+      "$id": "/properties/current_company",
+      "type": "string",
+      "title": "The Current_company Schema ",
+      "default": "",
+      "examples": ["rithm"]
+    },
+    "email": {
+      "$id": "/properties/email",
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 60,
+      "title": "The Email Schema ",
+      "default": "",
+      "examples": ["michael@rithmschool.com"]
+    },
+    "_token": {
+      "$id": "/properties/token",
+      "type": "string",
+      "title": "The Token Schema ",
+      "default": "",
+      "examples": [
+        "foo123"
+      ]
+    }
+  }
+}
