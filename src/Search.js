@@ -8,7 +8,7 @@ class Search extends Component {
       search: '',
       // empty string because we want placeholder values to show
       // for the following keys
-      min_employees: '', 
+      min_employees: '',
       max_employees: '',
       min_salary: '',
       min_equity: '',
@@ -19,7 +19,6 @@ class Search extends Component {
   }
 
   handleChange(evt) {
-    console.log(evt.target);
     this.setState({ [evt.target.name]: evt.target.value });
   }
 
@@ -52,59 +51,78 @@ class Search extends Component {
       (min_employees > max_employees))
   }
 
-  renderForm() {
-    const { search, max_employees, min_employees, min_salary, min_equity } = this.state;
-    const { searchFor } = this.props;
+  generateCompanyFieldProps() {
+    const { search, max_employees, min_employees } = this.state;
+    return [{
+      id: "search",
+      placeholder: "Name",
+      value: search,
+      handleChange: this.handleChange
+    },
+    {
+      id: "min_employees",
+      placeholder: "Min employees",
+      type: "number",
+      value: min_employees,
+      handleChange: this.handleChange
+    },
+    {
+      id: "max_employees",
+      placeholder: "Max employees",
+      type: "number",
+      value: max_employees,
+      handleChange: this.handleChange
+    }];
+  }
 
-    return (
-      // <InputField id/name/htmlFor="search", placeholder/label:, value, handleChange /> or just pojos
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <InputField
-            id="search"
-            placeholder={searchFor === "companies" ? "Name" : "Title"}
-            value={search}
-            handleChange={this.handleChange}
-          />
-          {/* <label htmlFor="search">{searchFor === "companies" ? "Name: " : "Title: "}</label>
-          <input
-            id="search"
-            name="search"
-            value={search}
-            onChange={this.handleChange}
-            placeholder="search" /> */}
-          {searchFor === "companies" ? renderCompaniesSearch() : renderJobsSearch()}
-          {/* <label htmlFor={searchFor === "companies" ? "min_employees" : "min_salary"}>
-            {searchFor === "companies" ? "Min employees: " : "Min salary: "}
-          </label>
-          <input
-            id={searchFor === "companies" ? "min_employees" : "min_salary"}
-            name={searchFor === "companies" ? "min_employees" : "min_salary"}
-            type="number"
-            value={searchFor === "companies" ? min_employees : min_salary}
-            onChange={this.handleChange}
-            placeholder={searchFor === "companies" ? "Min employees" : "Min salary"} /> */}
-
-          <label htmlFor={searchFor === "companies" ? "max_employees" : "min_equity"}>
-            {searchFor === "companies" ? "Max employees: " : "Min equity: "}
-          </label>
-          <input
-            id={searchFor === "companies" ? "max_employees" : "min_equity"}
-            name={searchFor === "companies" ? "max_employees" : "min_equity"}
-            type="number"
-            step={searchFor === "companies" ? 1 : "any"}
-            value={searchFor === "companies" ? max_employees : min_equity}
-            onChange={this.handleChange}
-            placeholder={searchFor === "companies" ? "Max employees" : "Min equity"} />
-          <button
-            disabled={searchFor === "companies" ? this.shouldBeDisabled() : false}>Search</button>
-        </form>
-      </div>
-    )
+  generateJobsFieldProps() {
+    const { search, min_salary, min_equity } = this.state;
+    return [{
+      id: "search",
+      placeholder: "Title",
+      value: search,
+      handleChange: this.handleChange
+    },
+    {
+      id: "min_salary",
+      placeholder: "Min salary",
+      type: "number",
+      value: min_salary,
+      handleChange: this.handleChange
+    },
+    {
+      id: "min_equity",
+      placeholder: "Min equity",
+      type: "number",
+      step: "any",
+      value: min_equity,
+      handleChange: this.handleChange
+    }];
   }
 
   render() {
-    return this.renderForm();
+    let inputs = null;
+
+    if (this.props.searchFor === "companies") {
+      inputs = this.generateCompanyFieldProps().map(attr => <InputField attributes={attr} />);
+    } else {
+      inputs = this.generateJobsFieldProps().map(attr => <InputField attributes={attr} />);
+    }
+
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          {inputs}
+          <button
+            disabled={
+              this.props.searchFor === "companies" ?
+                this.shouldBeDisabled() :
+                false}>
+            Search
+          </button>
+        </form>
+      </div>
+    )
   }
 }
 export default Search;

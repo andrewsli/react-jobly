@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 
 class InputField extends Component {
-  static defaultProps = {
-    type: "text"
-  }
-  //this.props = {htmlFor, id, LabelName, name, type, value, onChange,placeholder}
   constructor(props) {
     super(props)
     this.state = {
@@ -13,18 +9,18 @@ class InputField extends Component {
   }
 
   changeField(evt){
-    this.props.handleChange(evt);
+    this.props.attributes.handleChange(evt);
   }
 
   render() {
-    const { id, placeholder, value, type} = this.props;
-
+    const { id, placeholder, value, type, step} = this.props.attributes;
     return (
-      <div>
+      <div style={{display: "inline-block"}}>
         <label htmlFor={id}>{`${placeholder}: `}</label>
         <input
           id={id}
-          type={type}
+          type={type || "text"}
+          step={step || undefined}
           name={id}
           value={value}
           onChange={this.changeField}
