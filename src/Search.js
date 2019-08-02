@@ -44,11 +44,13 @@ class Search extends Component {
 
   shouldBeDisabled() {
     const { max_employees, min_employees } = this.state;
-    return ((max_employees !== null && max_employees !== undefined && max_employees !== '')
-      &&
-      (min_employees !== null && min_employees !== undefined && min_employees !== '')
-      &&
-      (min_employees > max_employees))
+    return ((max_employees !== null &&
+             max_employees !== undefined &&
+             max_employees !== '') 
+            && (min_employees !== null &&
+                min_employees !== undefined &&
+                min_employees !== '')
+            && (min_employees > max_employees))
   }
 
   generateCompanyFieldProps() {
@@ -104,9 +106,13 @@ class Search extends Component {
     let inputs = null;
 
     if (this.props.searchFor === "companies") {
-      inputs = this.generateCompanyFieldProps().map(attr => <InputField attributes={attr} />);
+      inputs = this.generateCompanyFieldProps().map(
+        attr => <InputField attributes={attr} key={attr.id}/>
+      );
     } else {
-      inputs = this.generateJobsFieldProps().map(attr => <InputField attributes={attr} />);
+      inputs = this.generateJobsFieldProps().map(
+        attr => <InputField attributes={attr} key={attr.id}/>
+      );
     }
 
     return (

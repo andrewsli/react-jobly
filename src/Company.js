@@ -27,9 +27,9 @@ class Company extends Component {
         <p>{description}</p>
         {jobs.map(job =>
           <JobCard equity={job.equity}
-                   salary={job.salary}
-                   title={job.title} 
-                   key={job.id}/>
+            salary={job.salary}
+            title={job.title}
+            key={job.id} />
         )}
       </div>
     )
@@ -37,7 +37,9 @@ class Company extends Component {
 
   render() {
     return (
-      this.state.loading ? <p>Fetching company</p> : this.renderCompanyDetails()
+      this.state.loading ?
+        <p>Fetching company</p> :
+        this.renderCompanyDetails()
     );
   }
 }

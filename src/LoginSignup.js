@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import JoblyApi from "./JoblyApi";
 import { Redirect } from "react-router-dom";
+import UserContext from './UserContext';
 
 class LoginSignup extends Component {
+  static contextType = UserContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -37,7 +39,13 @@ class LoginSignup extends Component {
     const { username, password, first_name, last_name, email } = this.state;
     let token = null;
     if (this.state.signUp) {
-      token = await JoblyApi.addUser({ username, password, first_name, last_name, email });
+      token = await JoblyApi.addUser({
+        username,
+        password,
+        first_name,
+        last_name,
+        email
+      });
     } else {
       token = await JoblyApi.logIn({ username, password });
     }
@@ -75,7 +83,8 @@ class LoginSignup extends Component {
   }
 
   render() {
-    if (this.props.currUser) {
+    const currUser = this.context;
+    if (currUser) {
       return (<Redirect to="/" />)
     }
     const { username, password } = this.state;
@@ -101,7 +110,7 @@ class LoginSignup extends Component {
             value={password}
             onChange={this.handleChange}
             placeholder="Password" />
-          {this.state.signUp ? this.renderSignUp() : null}
+          {this.state.signUp && this.renderSignUp()}
           <button>{this.state.signUp ? "Sign up" : "Log in"}</button>
         </form>
       </div>

@@ -5,6 +5,7 @@ import Nav from "./Nav";
 import Routes from "./Routes";
 import jwt from "jsonwebtoken";
 import JoblyApi from "./JoblyApi";
+import UserContext from "./UserContext";
 
 
 class App extends Component {
@@ -19,7 +20,6 @@ class App extends Component {
     this.login = this.login.bind(this);
     this.logOut = this.logOut.bind(this);
     this.updateUser = this.updateUser.bind(this);
-    this.updateJobs = this.updateJobs.bind(this);
   }
 
   //call login to get rid of duplicate code
@@ -37,6 +37,16 @@ class App extends Component {
     this.setState({ currUser });
   }
 
+  logOut() {
+    localStorage.removeItem("token");
+    this.setState({ currUser: null });
+  }
+
+  async updateUser() {
+    let currUser = await this.getUser();
+    this.setState({ currUser });
+  }
+
   async getUser() {
     try {
       let user = (await jwt.decode(localStorage.token)).username;
@@ -47,35 +57,21 @@ class App extends Component {
     }
   }
 
-  logOut() {
-    localStorage.removeItem("token");
-    this.setState({ currUser: null });
-  }
-
-  updateUser(updatedUser) {
-    const { username, first_name, last_name, email, photo_url } = updatedUser;
-    this.setState({ currUser: { username, first_name, last_name, email, photo_url } });
-  }
-
-  async updateJobs() {
-    let currUser = await this.getUser();
-    this.setState({ currUser });
-  }
-
   render() {
     if (this.state.loading) {
       return null;
     } else {
       return (
         <div className="App">
-          <BrowserRouter>
-            <Nav currUser={this.state.currUser} />
-            <Routes currUser={this.state.currUser}
-              loginUser={this.login}
-              logOutUser={this.logOut}
-              updateUserDetails={this.updateUser}
-              updateUserJobs={this.updateJobs} />
-          </BrowserRouter>
+          <UserContext.Provider value={this.state.currUser}>
+            <BrowserRouter>
+              <Nav/>
+              <Routes
+                loginUser={this.login}
+                logOutUser={this.logOut}
+                updateUserDetails={this.updateUser} />
+            </BrowserRouter>
+          </UserContext.Provider>
         </div>
       );
     }

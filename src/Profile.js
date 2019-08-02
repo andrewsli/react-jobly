@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import JoblyApi from "./JoblyApi";
 import { Redirect } from "react-router-dom";
+import UserContext from './UserContext';
 
 class Profile extends Component {
+  static contextType = UserContext;
+
   constructor(props) {
     super(props);
 
@@ -22,9 +25,10 @@ class Profile extends Component {
   }
 
   async componentDidMount() {
-    if (this.props.currUser) {
+    const currUser = this.context;
+    if (currUser) {
       try {
-        let { username, first_name, last_name, email, photo_url } = this.props.currUser;
+        let { username, first_name, last_name, email, photo_url } = currUser;
         this.setState({ username, first_name, last_name, email, photo_url, loading: false });
       } catch {
         this.setState({ loading: false })
@@ -35,8 +39,14 @@ class Profile extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.updated) {
-      setTimeout(() => {this.setState({ updated: false })}, 3000)
+    if (this.state.updated && !this.timerID) {
+      this.timerID = setTimeout(() => { this.setState({ updated: false }) }, 3000);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.timerID) {
+      clearTimeout(this.timerID);
     }
   }
 
@@ -49,7 +59,9 @@ class Profile extends Component {
     const { username, password, first_name, last_name, email, photo_url } = this.state;
     const userDetails = { password, first_name, last_name, email, photo_url };
     for (let key in userDetails) {
-      if (userDetails[key] === undefined || userDetails[key] === null || userDetails[key] === '') {
+      if (userDetails[key] === undefined ||
+        userDetails[key] === null ||
+        userDetails[key] === '') {
         delete userDetails[key];
       }
     }
@@ -59,10 +71,12 @@ class Profile extends Component {
   }
 
   render() {
+    console.log("RENDERING");
+    const currUser = this.context;
     if (this.state.loading === true) {
       return <p>Loading...</p>
     } else {
-      if (!this.props.currUser) {
+      if (!currUser) {
         return <Redirect to={{
           pathname: '/login',
           state: { needsLogin: true }
@@ -86,11 +100,15 @@ class Profile extends Component {
           <label>Photo URL</label>
           <input name="photo_url" value={photo_url ? photo_url : ''} onChange={this.handleChange} />
           <label>New Password</label>
-          <input name="password" type="password" value={password} onChange={this.handleChange} /> <br />
-          {this.state.updated ? <p>User successfully updated</p> : <button disabled={this.state.password === ''}>Save Changes</button>
+          <input name="password" type="password" value={password} onChange={this.handleChange} />
+          <br />
+          {this.state.updated ?
+            <p>User successfully updated</p> :
+            <button disabled={this.state.password === ''}>
+              Save Changes
+            </button>
           }
         </form>
-
       </div>
     );
   }

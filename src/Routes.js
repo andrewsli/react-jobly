@@ -11,18 +11,17 @@ import Logout from "./Logout";
 
 class Routes extends Component {
   render() {
-    const { updateUserDetails, updateUserJobs, currUser, loginUser, logOutUser } = this.props;
+    const { updateUserDetails, loginUser, logOutUser } = this.props;
     return (
       <Switch>
-        <Route exact path="/" render={() => <Home currUser={currUser}/>} />
-        <Route exact path="/companies" render={() => <Companies currUser={currUser} />} />
-        <Route exact path="/companies/:handle" render={(rtProps)=> <Company currUser={currUser} {...rtProps} />} />
-        <Route exact path="/jobs" render={() => <Jobs currUser={currUser} updateCurrJobs={updateUserJobs}/>} />
-        <Route exact path="/profile" render={() => <Profile updateCurrUser={updateUserDetails} currUser={currUser} />} />
-        <Route exact path="/login" render={(rtProps) => <LoginSignup {...rtProps} currUser={currUser} loginUser={loginUser}/>} />
+        <Route exact path="/" render={() => <Home/>} />
+        <Route exact path="/companies" render={() => <Companies />} />
+        <Route exact path="/companies/:handle" render={(rtProps)=> <Company {...rtProps} />} />
+        <Route exact path="/jobs" render={() => <Jobs updateCurrUser={updateUserDetails}/>} />
+        <Route exact path="/profile" render={() => <Profile updateCurrUser={updateUserDetails} />} />
+        <Route exact path="/login" render={(rtProps) => <LoginSignup {...rtProps} loginUser={loginUser}/>} />
         <Route exact path="/logout" render={() => <Logout logOutUser={logOutUser}/>} />
         <Route render={() => <NotFound />}/>
-        {/* Alternative for Not Found: <Redirect to="/" /> */}
       </Switch>
     );
   }

@@ -6,7 +6,7 @@ const DEFAULT_LOGO = 'https://facebookbrand.com/wp-content/uploads/2019/04/f_log
 
 class CompanyCard extends Component {
   render() {
-    const {name, description, logo_url, handle} = this.props;
+    const { name, description, logo_url, handle } = this.props;
     return (
       <Link to={`/companies/${handle}`}>
         <div className="companyCard">
@@ -17,7 +17,9 @@ class CompanyCard extends Component {
             {description}
           </div>
           <div className="companyCard-logo">
-            <img style={{maxWidth: "100%", maxHeight: "100%"}} src={logo_url || DEFAULT_LOGO} alt={handle} />
+            <img style={{ maxWidth: "100%", maxHeight: "100%" }}
+              src={logo_url || DEFAULT_LOGO}
+              alt={handle} />
           </div>
         </div>
       </Link>

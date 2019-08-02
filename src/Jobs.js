@@ -3,8 +3,11 @@ import Search from "./Search";
 import JoblyApi from "./JoblyApi";
 import JobCard from "./JobCard";
 import { Redirect } from "react-router-dom";
+import UserContext from './UserContext';
 
 class Jobs extends Component {
+  static contextType = UserContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -15,7 +18,8 @@ class Jobs extends Component {
   }
 
   async componentDidMount() {
-    if (this.props.currUser) {
+    const currUser = this.context;
+    if (currUser) {
       try {
         let jobs = await JoblyApi.getJobs();
         this.setState({ jobs, loading: false })
@@ -36,7 +40,8 @@ class Jobs extends Component {
   }
 
   render() {
-    const { currUser, updateCurrJobs }= this.props;
+    const currUser = this.context;
+    const { updateCurrUser } = this.props;
 
     if (this.state.loading === true) {
       return <p>Loading...</p>
@@ -50,18 +55,19 @@ class Jobs extends Component {
     }
 
     const jobs = this.state.jobs.map(job =>
-      <JobCard 
+      <JobCard
         currUser={currUser}
         equity={job.equity}
         salary={job.salary}
         title={job.title}
         id={job.id}
-        updateJobs={updateCurrJobs}
+        updateJobs={updateCurrUser}
         key={job.id} />);
 
     return (
       <div>
-        <Search searchFor="jobs" searchJobs={this.handleJobSearch} />
+        <Search searchFor="jobs"
+          searchJobs={this.handleJobSearch} />
         {jobs}
       </div>
     );

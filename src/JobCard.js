@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import "./JobCard.css";
 import JoblyApi from './JoblyApi';
+import UserContext from './UserContext';
 
 class JobCard extends Component {
+  static contextType = UserContext;
   constructor(props){
     super(props);
 
@@ -16,7 +18,8 @@ class JobCard extends Component {
   }
 
   applied(){
-    const { id, currUser } = this.props;
+    const currUser = this.context;
+    const { id } = this.props;
     return (currUser.jobs.findIndex(job => job.id === id) !== -1);
   }
 
