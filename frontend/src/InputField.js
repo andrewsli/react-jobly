@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 class InputField extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-    }
     this.changeField = this.changeField.bind(this);
   }
 

@@ -79,3 +79,11 @@ class App extends Component {
 }
 
 export default App;
+
+
+// TODOS: in jobs, when checking for applied jobs, use Set instead of array
+// refactor Search using classes (private variables/methods/etc. in ES2020)
+// dupe code in App
+// render once in redirects
+// explore functions and objects in context
+// docstrings
