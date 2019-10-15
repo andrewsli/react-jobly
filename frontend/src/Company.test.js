@@ -1,1 +1,0 @@
-import Company from "./Company";

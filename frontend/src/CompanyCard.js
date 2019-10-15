@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import "./companyCard.css";
 
-const DEFAULT_LOGO = 'https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png';
+const DEFAULT_LOGO = 'https://png.pngtree.com/svg/20170307/the_company_default_logo_574534.png';
 
 class CompanyCard extends Component {
   render() {
